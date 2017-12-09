@@ -12523,17 +12523,6 @@ declare module _ {
         isUndefined(): LoDashExplicitWrapper<boolean>;
     }
 
-    //_.isWeakMap
-    interface LoDashStatic {
-        /**
-         * Checks if value is classified as a WeakMap object.
-         *
-         * @param value The value to check.
-         * @returns Returns true if value is correctly classified, else false.
-         */
-        isWeakMap<K, V>(value?: any): value is WeakMap<K, V>;
-    }
-
     interface LoDashImplicitWrapperBase<T, TWrapper> {
         /**
          * @see _.isSet
@@ -20376,12 +20365,6 @@ declare module "lodash/isUndefined" {
 }
 
 
-declare module "lodash/isWeakMap" {
-   const isWeakMap: typeof _.isWeakMap;
-   export = isWeakMap;
-}
-
-
 declare module "lodash/isWeakSet" {
    const isWeakSet: typeof _.isWeakSet;
    export = isWeakSet;
@@ -20800,9 +20783,3 @@ declare module "lodash/fp" {
 declare module "lodash" {
     export = _;
 }
-
-// Backward compatibility with --target es5
-interface Set<T> {}
-interface Map<K, V> {}
-interface WeakSet<T> {}
-interface WeakMap<K, V> {}

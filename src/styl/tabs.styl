@@ -1,19 +1,25 @@
-.tabs
+
+// tab navigation
+.tabs-nav-header
+  position relative
+
+.tabs-navigation
   display flex
   flex-flow row nowrap
   height 48px
   position relative
-  background-color headerBgDark
+  background headerBgDark
 
-.tab
+.tab-button
   flex 0 1 auto
   text-transform uppercase
   text-align center
   padding 0 10px
   font-size 14px
   overflow hidden
-  height 46px
-  &.active,&:active
+  height calc(100% - 2px)
+  color darken(headerBgDarkColor, 10%)
+  &.active
     background-color lighten(bgdark, 10%)
   &.selected
     color gold
@@ -25,4 +31,18 @@
   height 2px
   background-color gold
   transition transform ease-out 200ms
-  z-index 3
+
+
+// tab content
+.tabs-view
+  flex 1 1 auto
+  display flex
+  flex-flow row nowrap
+  width 300vw
+  transition transform ease-out 100ms
+
+.tab-content
+  flex 1 1 auto
+  width 100vw
+  display flex
+  flex-flow column nowrap

@@ -1,18 +1,35 @@
 (function() {
   function noop() {}
 
+  // dispatch cordova events for testing purpose
+  window.setOffline = function() {
+    window.navigator.connection.type = window.Connection.NONE;
+    document.dispatchEvent(new window.Event('offline'));
+  };
+  window.setOnline = function() {
+    window.navigator.connection.type = window.Connection.WIFI;
+    document.dispatchEvent(new window.Event('online'));
+  };
+  window.setBackground = function() {
+    document.dispatchEvent(new window.Event('pause'));
+  };
+  window.setForeground = function() {
+    document.dispatchEvent(new window.Event('resume'));
+  };
+
   window.cordova = {};
   window.cordova.plugins = {};
   window.plugins = {};
 
   window.cordova.platformId = 'browser';
 
-  // analytics
-  window.ga = {
-    startTrackerWithId: noop,
-    trackException: noop,
-    trackView: noop,
-    trackEvent: noop
+  // filesystem
+  window.LocalFileSystem = {
+    PERSISTENT: 0,
+    TEMPORARY: 1
+  };
+  window.requestFileSystem = function() {
+    return Promise.resolve();
   };
 
   // push
@@ -114,19 +131,13 @@
   window.navigator.connection = {
     type: window.Connection.WIFI
   };
-  window.setOffline = function() {
-    window.navigator.connection.type = window.Connection.NONE;
-    document.dispatchEvent(new window.Event('offline'));
-  };
-  window.setOnline = function() {
-    window.navigator.connection.type = window.Connection.WIFI;
-    document.dispatchEvent(new window.Event('online'));
-  };
 
   // notification
   window.navigator.notification = {};
   window.navigator.notification.alert = window.alert.bind(window);
-  window.navigator.notification.confirm = window.confirm.bind(window);
+  window.navigator.notification.confirm = function(message, callback) {
+    if (window.confirm(message)) callback()
+  }
   window.navigator.notification.prompt = window.prompt.bind(window);
   window.navigator.notification.beep = noop;
 
@@ -148,6 +159,20 @@
     subscribe: noop
   };
 
+  // local notifications
+  window.cordova.plugins.notification = {
+    local: {
+      schedule: function(opts) {
+        console.log('Local notification triggered with opts:', opts)
+      },
+      cancelAll: function() {
+        console.log('Local notifications canceled')
+      },
+      on: noop
+    }
+  }
+
+
 }());
 
 if (!window.Stockfish) {
@@ -159,7 +184,7 @@ if (!window.Stockfish) {
         if (stockfishWorker) {
           setTimeout(resolve);
         } else {
-          stockfishWorker = new Worker('vendor/stockfish.js');
+          stockfishWorker = new Worker('../stockfish.js');
           setTimeout(resolve, 10);
         }
       });

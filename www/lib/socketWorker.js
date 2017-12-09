@@ -1,5 +1,4 @@
 var socketInstance;
-var currentUrl;
 
 var strongSocketDefaults = {
   params: {
@@ -10,7 +9,7 @@ var strongSocketDefaults = {
     name: 'unnamed',
     pingMaxLag: 8000, // time to wait for pong before reseting the connection
     pingDelay: 2000, // time between pong and ping
-    autoReconnectDelay: 1000,
+    autoReconnectDelay: 2000,
     ignoreUnknownMessages: true,
     sendOnOpen: null, // message to send on socket open
     registeredEvents: []
@@ -29,14 +28,11 @@ function StrongSocket(clientId, socketEndPoint, url, version, settings) {
   this.connectSchedule = null;
   this.ackableMessages = [];
   this.lastPingTime = Date.now();
+  this.pongCount = 0;
   this.currentLag = 0;
   this.averageLag = 0;
   this.autoReconnect = true;
   this.tryAnotherUrl = false;
-  this.urlsPool = [this.socketEndPoint].concat(
-  [9025, 9026, 9027, 9028, 9029].map(
-    function(e) { return this.socketEndPoint + ':' + e; }.bind(this)
-  ));
 
   this.debug('Debug is enabled');
   this.connect();
@@ -53,7 +49,7 @@ StrongSocket.prototype = {
     if (self.ws) self.ws.close();
 
     self.autoReconnect = true;
-    var fullUrl = self.baseUrl() + self.url + '?' + serializeQueryParameters(self.settings.params);
+    var fullUrl = self.socketEndPoint + self.url + '?' + serializeQueryParameters(self.settings.params);
     self.debug('connection attempt to ' + fullUrl, true);
 
     self.ws = new WebSocket(fullUrl);
@@ -61,6 +57,7 @@ StrongSocket.prototype = {
       self.onError(e);
     };
     self.ws.onclose = function() {
+      self.debug('connection closed');
       postMessage({ topic: 'disconnected' });
       if (self.autoReconnect) {
         self.debug('Will autoreconnect in ' + self.options.autoReconnectDelay);
@@ -103,7 +100,12 @@ StrongSocket.prototype = {
     var self = this;
     var data = d || {},
     options = o || {};
-    if (options.withLag) d.lag = Math.round(self.averageLag);
+    if (options.withLag) {
+      d.l = Math.round(self.averageLag);
+    }
+    if (options.millis !== undefined) {
+      d.s = Math.floor(options.millis * 0.1).toString(36);
+    }
     if (options.ackable) {
       self.ackableMessages.push({
         t: t,
@@ -163,16 +165,23 @@ StrongSocket.prototype = {
     var self = this;
     clearTimeout(self.connectSchedule);
     self.schedulePing(self.options.pingDelay);
-    self.currentLag = Date.now() - self.lastPingTime;
-    if (!self.averageLag) self.averageLag = self.currentLag;
-    else self.averageLag = 0.2 * (self.currentLag - self.averageLag) + self.averageLag;
+
+    self.pongCount++;
+    self.currentLag = Math.min(Date.now() - self.lastPingTime, 10000);
+
+    // Average first 4 pings, then switch to decaying average.
+    var mix = self.pongCount > 4 ? 0.1 : (1 / self.pongCount);
+    self.averageLag += mix * (self.currentLag - self.averageLag);
   },
 
   pingData: function() {
-    return JSON.stringify({
-      t: 'p',
-      v: this.version
-    });
+    var self = this;
+    var data = {
+      t: 'p'
+    };
+    if (self.version !== undefined) data.v = self.version
+    if (self.pongCount % 8 === 2) data.l = Math.round(0.1 * self.averageLag);
+    return JSON.stringify(data);
   },
 
   handle: function(msg) {
@@ -253,20 +262,6 @@ StrongSocket.prototype = {
 
   pingInterval: function() {
     return this.options.pingDelay + this.averageLag;
-  },
-
-  baseUrl: function() {
-    if (this.socketEndPoint === 'wss://socket.lichess.org') {
-      if (!currentUrl) {
-        currentUrl = this.urlsPool[0];
-      } else if (this.tryAnotherUrl) {
-        this.tryAnotherUrl = false;
-        currentUrl = this.urlsPool[(this.urlsPool.indexOf(currentUrl) + 1) % this.urlsPool.length];
-      }
-      return currentUrl;
-    }
-
-    return this.socketEndPoint;
   }
 };
 
@@ -301,17 +296,29 @@ function create(payload) {
   }
 }
 
+function doSend(payload) {
+  var t = payload[0];
+  var d = payload[1];
+  var o = payload[2];
+  if (socketInstance) socketInstance.send(t, d, o);
+  else console.info('socket instance is null, could not send socket msg: ', payload);
+}
+
 self.onmessage = function(msg) {
   switch (msg.data.topic) {
     case 'create':
       create(msg.data.payload);
       break;
     case 'send':
-      var t = msg.data.payload[0];
-      var d = msg.data.payload[1];
-      var o = msg.data.payload[2];
-      if (socketInstance) socketInstance.send(t, d, o);
-      else console.info('socket instance is null, could not send socket msg: ', msg.data.payload);
+      doSend(msg.data.payload);
+      break;
+    case 'ask':
+      var event = msg.data.payload.listenTo;
+      if (socketInstance &&
+        socketInstance.options.registeredEvents.indexOf(event) === -1) {
+        socketInstance.options.registeredEvents.push(event);
+      }
+      doSend(msg.data.payload.msg);
       break;
     case 'connect':
       if (socketInstance) socketInstance.connect();

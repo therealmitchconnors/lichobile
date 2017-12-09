@@ -1,194 +1,220 @@
 .analyseSettings
+  font-size 0.9em
   label[for='showComments']
     text-transform capitalize
+
+  .ceval-multipv
+    display flex
+    justify-content space-between
+    > .slider
+      width 30%
+      height 20px
 
 .analyse-table, .explorerTable
   flex 1 1 auto
   display flex
 
-.analyse-tableWrapper
-  margin-top 5px
+.analyse-table
+  position relative
+
+.analyse-header
+  background-color headerBgDark
+  flex 0 0 25px
+  overflow hidden
+  display flex
+  flex-flow row nowrap
+  align-items center
+  align-content center
+
+.analyse-tabs
   flex 1 1 auto
-  width 100%
+  display flex
+  flex-flow row nowrap
+  align-items center
+  justify-content space-between
+  font-size 0.9em
+  min-width 0 // fix white-space nowrap
+  > .tab-title
+    flex 1 1 auto
+    padding 0 0.5em
+    overflow hidden
+    white-space nowrap
+    > div
+      overflow hidden
+      text-overflow ellipsis
+  > .tabs-navigation
+    background inherit
+    flex 0 0 auto
+    height 25px
+    > .tab-button
+      padding 0 0.5em
+      height 25px
+
+.analyse-tableWrapper
+  margin-top 2px
+  flex 1 1 auto
   display flex
   flex-flow column nowrap
+  min-width 0 // fix width bug on landscape
+  @media only screen and (orientation: landscape)
+    margin-top 0
+
+.analyse-table
+  flex-flow column nowrap
+  font-size 0.9em
+  overflow hidden
+
+.analyse-tabsContent
+  background lighten(bgdark, 5%)
+  flex 1 1 auto
+  > .tab-content
+    > div
+      width 100%
+    @media only screen and (orientation: landscape)
+      width 'calc(100vw - 100vh + %s)' % headerHeight
 
 .analyse_actions_bar
-  flex 0 0 footerHeight
-  display flex
+  flex 0 0 40px
   padding 0
-  height initial
   width 100%
   overflow hidden
 
 .analyse-infosBox
-  flex 1 1 auto
+  flex 1 1 40%
   display flex
   flex-flow column nowrap
   > .native_scroller
     flex 1 1 auto
 
-.analyse-game
-  flex 0 0 60%
-  max-width 230px
+.analyse-loadingReplay
+  flex 1 1 auto
   display flex
+  justify-content center
+  align-items center
+  > .spinner
+    width 40px
+    height 40px
+
+.analyse-replayWrapper
+  display: flex
   flex-flow column nowrap
+  > .native_scroller
+    // flex height
+    height initial
+
+.analyse-fixedBar
+  background-color lighten(headerBgDark, 5%)
+  flex 0 0 25px
+  display flex
+  padding 0 10px
+  flex-flow row nowrap
+  justify-content space-between
+  align-items center
 
 .analyse-replay
+  flex 1 1 auto
   position relative
-  display flex
-  flex-flow column nowrap
   font-size 0.9rem
-  > .result, > .status
-    font-size 0.8em
-    width 100%
-  > .result
-    margin-top 2px
-    text-align center
-    font-weight bold
-  > .status
-    font-style italic
-    text-align center
+  white-space normal
+  line-height 1.05em
   &.displayPieces
-    > turn
-      > move
-        font-family ChessSansPiratf
+    move
+      font-family ChessSansPiratf
 
-turn
-  width 100%
-  display flex
-  flex 0 0 25px
-  > move
-    display flex
-    flex 0 0 44%
-    padding-left 5px
-    padding-right 2px
-    margin 0
-    line-height 25px
-  > index
-    font-size 0.9em
-    line-height 25px
-    margin 0
-    flex 0 0 12%
-    text-align center
-    background lighten(bgdark, 5%)
+.analyse-checkCount
+  > span:first-child
+    margin-right 0.5em
+
+.analyse-openingBox
+  line-height 25px
+  padding 0 4px
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size 0.75em
+  background lighten(bgdark, 5%)
+
+.analyse-moveList
+  padding 5px
+  white-space normal
+  &.ios
+    comment
+      vertical-align initial
 
 index
-  color rgba(textDarkBg, 70%)
-  font-weight lighter
-  margin-right 5px
-  margin-left 5px
-  &:first-child
-    margin-left 0
+  color rgba(textDarkBg, 50%)
+  margin-right 0.2em
 
 move
-  display inline-flex
-  margin 0 2px
+  display inline-block
+  padding: 0.25em 0.17em
   overflow hidden
   white-space nowrap
+  &.current, &.active
+    border-radius 3px
   &.current
-    color gold
-    font-weight bold
-    > eval
-      color rgba(gold, 70%)
+    color #fff
+    background rgba(blue, 0.8)
+    font-weight normal
+    > index
+      color #fff
   &.active
       background lighten(bgdark, 10%)
 
 glyph
-  flex 0 1 auto
   font-size 0.85em
-  overflow hidden
-  text-align center
-  align-self center
-  margin-left 3px
-  margin-left 2px
+  margin-left 0.2em
 
 eval
-  flex 1 0 auto
   text-align right
   font-size 0.65em
   font-weight lighter
-  color rgba(textDarkBg, 70%)
+  color rgba(textDarkBg, 75%)
 
-.analysisMeta
-  flex 0 0 auto
-  min-height 25px
-  display flex
-  flex-flow row wrap
+interrupt
+  font-size 0.9em
+
+lines
+  display block
+  border-left 2px solid rgba(textDarkBg, 80%)
+
+line
+  display block
+  &:before
+    display inline-block
+    margin-bottom 5px
+    content: ' '
+    border-top: 2px solid rgba(textDarkBg, 80%)
+    width: 6px
+    height: 6px
+  &.visiting
+    white-space normal
+  > move
+    color rgba(textDarkBg, 0.7)
+  > .nested
+    margin-left 5px
+
+inline
+  display: inline;
+  font-style: italic;
+  font-size: 0.9em;
+  opacity: 0.8;
+  &:before, &:after
+    vertical-align 45%
+  &:before
+    content: '(';
+    margin-left: 2px;
+  &:after
+    content: ')';
+    margin-right: 2px;
+
+comment
+  display inline
   font-size 0.8em
-  background lighten(bgdark, 5%)
-  > .comment
-    font-size 0.8em
-    width 100%
-    display flex
-    padding: 0 5px
-    align-items center
-    word-wrap: break-word;
-    &.white
-      border-left 2px solid #ccc
-    &.black
-      border-right 2px solid #ccc
-      justify-content flex-end
-    &.Inaccuracy
-      border-color: #56B4E9;
-    &.Mistake
-      border-color: #E69F00;
-    &.Blunder
-      border-color: #DF5353;
-  > .variationWrapper
-    width 100%
-    display flex
-    align-items center
-    > .variation
-      flex 0 1 auto
-      width calc(100% - 25px)
-      white-space nowrap
-      overflow hidden
-      &.visiting
-        > index, > move
-          color #ebe1cd
-        > move.current
-          color gold
-        white-space normal
-      &.nested
-        display inline
-        margin-left 5px
-    > .menuIcon
-      flex 0 0 13%
-      height 25px
-      font-size 1.5em
-      text-align center
-      margin 0
-      &:before
-        position relative
-        top 5px
-
-.analyse_variant_selector
-  width 100%
-  height 36px
-  margin 0
-  padding 0
-  padding-left 5px
-  background bgdark
-  box-shadow none
-  color #8a8a8a
-  > select
-    padding-left 30px
-    font-size 0.9em
-  > label
-    > i
-      color gold
-      font-size 20px
-
-.analyse-cevalBox
-  flex 0 0 36px
-  position relative
-  overflow hidden
-  width 100%
-  display flex
-  flex-flow row nowrap
-  align-items center
-  align-content center
+  color rgba(textDarkBg, 0.8)
+  margin 0 0.2em 0 0.1em
+  word-wrap break-word
+  vertical-align 45%
 
 .analyse-engine_info
   flex 1 0
@@ -201,108 +227,24 @@ eval
     overflow hidden
     text-overflow ellipsis
 
-.analyse-cevalBar
-  position absolute
-  transform translateX(-100%)
-  width 100%
-  height 2px
-  top 0
-  left 0
-  background green
-  transition transform linear 1s
-
-.analyse-curEval
-  flex 0 0 auto
-  height 36px
-  min-width 55px
+.analyse-gameInfos
   display flex
   flex-flow column nowrap
-  justify-content center
-  align-items center
-  font-size 16px
-  font-weight bold
-  padding 3px 5px
-  background lighten(bgdark, 5%)
-  > .spinner
-    width initial
-    height initial
-    font-size 16px
-    padding 0
-    margin 0
-    text-align center
-  @media only screen and (orientation: landscape) and (max-height 450px)
-    min-width 50px
-    font-size 16px
-    > .spinner
-      font-size 14px
-
-.analyse-bestMove
-  font-size 0.5rem
-  opacity 0.8
-  font-weight normal
-  line-height 1.2
-
-.analyse-gameInfosWrapper
-  padding 5px
-  font-size 0.8em
-  @media only screen and (min-width: 600px)
-    font-size 1em
-  @media only screen and (orientation landscape) and (min-width: 801px)
-    font-size 0.9em
-  @media only screen and (orientation landscape) and (min-width: 1025px)
-    font-size 1em
-  @media only screen and (orientation: landscape) and (max-height 450px)
-    font-size 0.7em
-
-.analyseGameInfosWrapper
-  display flex
-  border-bottom 1px solid lighten(bgdark, 15%)
-
-.analyse-gameInfosWrapper
-  display flex
-  flex-flow column wrap
   justify-content flex-start
+  align-items center
+  padding 2em 1em
+  width 100%
   > .gameInfos
     font-size 0.9em
   > .status
     font-size 0.9em
     margin-top 5px
+  > .analyse-tournamentInfo
+    margin-top 5px
 
 .analyseOpponent
   text-align left
-  width 100%
   margin-bottom 0.5em
-  > .pocket
-    width 100%
-    height calc(40vw / 6 + 10px)
-    > piece
-      width calc(40vw / 6)
-      height calc(40vw / 6)
-      &:after
-        padding: 3px 5px 4px 5px;
-        font-weight: bold;
-        border-radius: 1px;
-        font-size: 10px;
-        line-height: 10px;
-        padding: 1px 2px 2px 2px;
-  @media only screen and (orientation portrait) and (min-width 600px)
-    > .pocket > piece:after
-      font-size 18px
-      line-height 18px
-      padding 2px 3px 3px 3px
-  @media only screen and (orientation: landscape)
-    > .pocket
-      height 'calc(((100vw - 100vh - %s) * 40 / 100) / 6 + 10px)' % headerHeight
-      max-width initial
-      > piece
-        width 'calc(((100vw - 100vh - %s) * 40 / 100) / 6 + 10px)' % headerHeight
-        height 'calc(((100vw - 100vh - %s) * 40 / 100) / 6 + 10px)' % headerHeight
-  @media only screen and (orientation: landscape) and (aspect-ratio 4/3), (orientation: landscape) and (device-aspect-ratio 4/3), (orientation landscape) and (device-aspect-ratio 3/4)
-    > .pocket
-      height 'calc(((100vw - (100vh - %s - 12vh)) * 40 / 100) / 6 + 10px)' % headerHeight
-      > piece
-        width 'calc(((100vw - (100vh - %s - 12vh)) * 40 / 100) / 6 + 10px)' % headerHeight
-        height 'calc(((100vw - (100vh - %s - 12vh)) * 40 / 100) / 6 + 10px)' % headerHeight
 
 .analyseClock
   font-family Cousine
@@ -310,274 +252,115 @@ eval
   > span
     margin-left 5px
 
-.analysePlayerName.crazy
-  white-space nowrap
+.analysePlayerName
   overflow hidden
   text-overflow ellipsis
 
-
 .variationMenuPopup
-  position fixed
   font-size 1rem
-  .overlay_popup
-    height 100px
-    top calc((100% - 100px) / 2)
-    border-radius 5px
-    text-align center
-    > .variationMenu
-      display flex
-      flex-flow column nowrap
-      justify-content center
-      height 100%
-
-.explorerTable
-  position relative
-  overflow-x: hidden;
-  white-space: nowrap;
-  display flex
-  flex-flow column nowrap
-  > div
-    width 100%
-  .empty
-    text-align: center;
-  .spinner_overlay
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display flex
-    align-items center
-    justify-content center
-    visibility hidden
-    > .spinner
-      margin 22px 0 0
-      width initial
-      height initial
-      font-size 25px
-  tbody, > .message
-    transition: opacity 0.13s;
-  th, .title
-    color gold
-    text-transform: capitalize;
-    font-weight bold
-    font-size: 12px;
-    line-height: 22px;
-    background headerBgDark
-    text-align: left;
-    padding-left: 7px;
-  tr
-    transition: background-color 0.13s;
-    &:nth-child(even)
-      background: lighten(bgdark, 5%)
-  td
-    vertical-align middle
-    padding-left: 7px;
-  .white
-    background: #bbb;
-    color: #222;
-    box-shadow: 0 -5px 7px rgba(0,0,0,0.25) inset;
-  .draws, .black
-    color: #fff;
-    box-shadow: 0 5px 7px rgba(255,255,255,0.2) inset;
-  .draws
-    background: #666;
-    color: #ddd;
-  .black
-    background: #333;
-    box-shadow: 0 5px 7px rgba(255,255,255,0.1) inset;
-  .games
-    font-size 0.8em
-    width: 100%;
-    td
-      padding: 5px 0 5px 7px;
-      max-width: 110px;
-      span
-        display: block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    result
-      display: block;
-      text-align: center;
-      padding: 3px 5px;
-      border-radius: 3px;
-      font-family: monospace;
-      font-size: 0.9em;
-  .toconf
-    color gold
-    position: absolute;
-    top: 0;
-    right: 0;
-    display: block;
-    font-size: 20px;
-    line-height: 20px;
-    width 30px
-    height 30px
-    text-align: center;
-    opacity: 0.7;
-  .message
-    font-size 0.8em
-    text-align: center;
-    font-style: italic;
-    i
-      font-size: 22px;
-      display: inline-block;
-      margin: 10px 0 0;
-      opacity: 0.7;
-    h3
-      font-weight: bold;
-    p
-      white-space: normal;
-      padding: 0 10px;
-  &.loading
-    .spinner_overlay
-      visibility visible
-    tbody, .message
-      opacity: 0.4;
-
-.explorer-data
-  overflow-y auto
-  -webkit-overflow-scrolling touch
-
-.explorer-fixedTitle
-  flex 0 0 23px
-  font-size 13px
-  font-weight bold
-  line-height 22px
-  overflow hidden
-  white-space nowrap
-  background headerBgDark
-  padding 0 7px
-  color gold
-
-.explorerConfig
-  font-size 0.75em
-  section
-    padding: 8px 10px 0 10px;
-    &.db
-      padding-top: 5px;
-    &.save
-      text-align: center;
-      padding: 15px 0 10px 0;
-    label
-      font-weight: bold;
-      display: block;
-      line-height: 2em;
-      max-width 300px
-      margin 0 auto
-
-.explorerMove
-  &:first-child
-    font-size: 14px;
-    line-height: 30px;
-    padding-left: 7px;
-  &:nth-child(2), &:nth-child(3)
-    font-size: 10px;
-    opacity: 0.8;
-    text-align: right;
-  &:last-child
-    width: 100%;
-    padding-right: 7px;
-
-.explorerBar
-  text-align: center;
-  display: inline-block;
-  overflow: hidden;
-  vertical-align: middle;
-  border: 0px solid #555;
-  border-width: 1px 0;
-  box-sizing: border-box;
-  height: 16px;
-  line-height: 16px;
-  font-size: 11px;
-  &:first-child
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
-    border-left-width: 1px;
-
-  &:last-child
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-    border-right-width: 1px;
-
-.explorerTablebase
-  width: 100%;
-  td:first-child
-    font-family: 'ChessSansPiratf', sans-serif;
-    font-size: 14px;
-    line-height: 30px;
-    padding-left: 7px;
-  td:last-child
-    padding-right: 7px;
-    text-align: right;
-  result
-    padding: 3px 5px;
-    margin-left: 5px;
-    border-radius: 3px;
-    font-size: 0.9em;
-
-.evalSummary
-  display flex
-  flex-flow row wrap
-  justify-content center
-  padding 10px
-  > table
-    width 100%
-    &:first-child
-      margin-bottom 10px
-    > tbody
-      font-size 0.9em
-  th
-    width 20%
-    padding: 2px 8px;
-    text-align: center;
-    > span:before
-      margin 0
-
-.analysisProgress
-  background-color selectBg
+  height 100px
+  top calc((100% - 100px) / 2)
+  border-radius 5px
   text-align center
-  padding 10px
-
-.moves.displayPieces
-  .explorerMove
-    font-family ChessSansPiratf
+  .variationMenu
+    display flex
+    flex-flow column nowrap
+    justify-content center
+    height 100%
 
 .view-container.light
-  move.active
-    background darken(bglight, 10%)
+  .analyse-fixedBar
+    background-color bglight
 
-  .analyse-replay > turn > index, .analysisMeta
-    background darken(bglight, 7%)
+  .analyse-header
+    background-color #444
+
+  .analyse-tabsContent
+    background #fff
+
+  .ceval-curEval
+    background #3c3c3c
+    color headerBgDarkColor
+
+  .analyse-tabs
+    color darken(headerBgDarkColor, 5%)
+
+  comment
+    color rgba(textLightBg, 0.5)
+
+  index
+    color rgba(textLightBg, 0.5)
+
+  move
+    color inherit
+    &.active
+      background darken(bglight, 10%)
+    &.current
+      background blue
+      color #fff
+      > index
+        color #fff
+
+  line > move
+    color rgba(textLightBg, 0.7)
+
+  .analyse-openingBox
+    background darken(bglight, 5%)
 
   .analyse_variant_selector
     background: themeBgLight
     text-shadow: 0 1px 0 #FFF;
     color: #848484;
 
-  .analyse-curEval
-    background darken(bglight, 7%)
+.view-container.transp
 
-  .explorer-fixedTitle
-    background bgdark
+  .analyse-fixedBar
+    background-color transpBlack02
 
-  .explorerTable
-    th, .title
-      background bgdark
-    tr
-      &:nth-child(even)
-        background #fafafa
-    .white
-      background: #fff;
-      box-shadow: 0 -5px 7px rgba(0,0,0,0.1) inset;
-    .draws
-      background: #a0a0a0;
-    .black
-      background: #555;
-      color: #ddd;
-  .explorerBar
-    border-color #ccc
-  .explorerConfig
-    span
-      border-color #ccc
+  .analyse-header
+    background-color transpBlack06
 
+  .analyse-tabsContent
+    background-color transpBlack05
+
+  .analyse-tabs
+    > .tabs-navigation
+      background-color initial
+
+  .analyse_variant_selector.select_input
+    > label:after
+      color rgba(textTransp, 0.7)
+    background transparent
+
+  move
+    color textTransp
+    &.current
+      background-color transpWhite05
+      color #fff
+    &.active
+      background-color transpWhite01
+
+  line > move
+    color rgba(textTransp, 0.7)
+
+  index
+    color transpWhite04
+
+  comment
+    color transpWhite05
+
+  .analyse-cevalBox, .analyse-infosBox
+    background transpBlack03
+
+  .ceval-curEval
+    background transparent
+    border-right 1px solid transpWhite01
+
+  .analyse-engine_info
+    padding-left 5px
+
+  .analyse-openingBox
+    background rgba(255,255,255,0.1)
+
+  .analyse_actions_bar
+    background transpBlack06

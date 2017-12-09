@@ -1,20 +1,25 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "target": "es2015",
     "module": "commonjs",
-    "noImplicitAny": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "strictNullChecks": false,
+    "target": "es6",
+    "suppressImplicitAnyIndexErrors": false,
+    "strict": true,
+    "strictFunctionTypes": false,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
     "jsx": "preserve"
   },
   "include": [
-    "src/**/*"
+    "src/**/*.js",
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ],
   "exclude": [
     "node_modules",
     "plugins",
     "platforms",
-    "scripts"
+    "scripts",
+    "src/**/__tests__/*"
   ]
 }

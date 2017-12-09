@@ -1,8 +1,10 @@
 npm-debug.log
 
+/app.js.map
 /*.mobileprovision
 /*.keystore
 /build.json
+/scripts/deploy-stage.sh
 
 /platforms
 /plugins
@@ -10,6 +12,7 @@ npm-debug.log
 /www/app.js
 /www/index.html
 /www/css/compiled
+/www/locale
 
 /node_modules
 /env.json

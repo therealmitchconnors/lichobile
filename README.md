@@ -14,8 +14,8 @@ Multi-variant chess library is brought by [a JavaScript version of scalachess](h
 
 ## Requirements
 
-* [node](http://nodejs.org) v6.x
-* [cordova](https://cordova.apache.org/) v6.x
+* [node](http://nodejs.org) latest LTS version
+* [cordova](https://cordova.apache.org/) v7.x
 
 **Android:**
 
@@ -29,7 +29,7 @@ Multi-variant chess library is brought by [a JavaScript version of scalachess](h
 
 **iOS:**
 
-* OS X and [Xcode](https://developer.apple.com/xcode/download/) version 8.x
+* OS X and [Xcode](https://developer.apple.com/xcode/download/)
 
 ## Build the web application
 
@@ -43,6 +43,32 @@ to link your app to a lichess server.
 To build and watch for changes:
 
     $ npm run watch
+
+## Run the tests
+
+    $ npm run test
+
+## Run in a browser
+
+   chromium --user-data-dir=/tmp/lichobile-chrom --disable-web-security ~/lichobile/www/index.html
+
+## Build cordova application and run on device
+
+Be sure to check requirements above.
+
+See scripts defined in package.json for various environments.
+
+### Android
+
+Plug your device with USB, or use an emulator. Then:
+
+    $ npm run android-stage
+
+### iOS
+
+Plug your device with USB, or use an emulator. Then:
+
+    $ npm run ios-stage
 
 ## Build stockfish
 
@@ -61,4 +87,4 @@ Through XCode, in the build settings menu:
 
 ## Advanced setup
 
-See the wiki.
+See the [wiki](https://github.com/veloce/lichobile/wiki/Setting-a-lichess-dev-server-for-the-app).
